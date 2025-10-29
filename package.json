@@ -1,52 +1,27 @@
 {
-  "name": "react-tracking",
-  "version": "9.3.2",
+  "name": "@adobe/react-tracking",
+  "version": "1.0.0",
   "description": "Declarative tracking for React apps.",
   "keywords": [
     "declarative",
     "layer",
     "metrics",
-    "nyt",
+    "adobe",
     "react",
     "tracking"
   ],
-  "homepage": "https://github.com/nytimes/react-tracking",
+  "homepage": "https://github.com/adobe/react-tracking",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nytimes/react-tracking"
+    "url": "git+https://github.com/adobe/react-tracking"
   },
   "license": "Apache-2.0",
-  "author": "Jeremy Gayed <https://github.com/tizmagik>",
+  "author": "Kes Peart <https://github.com/kespeart>",
   "contributors": [
     {
-      "name": "Nicole Baram",
-      "email": "nicole.baram@nytimes.com",
-      "url": "https://github.com/nicolehollyNYT"
-    },
-    {
-      "name": "Oleh Ziniak",
-      "email": "oleh.ziniak@nytimes.com",
-      "url": "https://github.com/oziniak"
-    },
-    {
-      "name": "Ivan Kravchenko",
-      "email": "ivan@kravchenko.rocks",
-      "url": "https://github.com/ivankravchenko"
-    },
-    {
-      "name": "Jeremy Gayed",
-      "email": "jeremy.gayed@gmail.com",
-      "url": "https://github.com/tizmagik"
-    },
-    {
-      "name": "Lukasz Szmit",
-      "email": "lukasz.szmit@workday.com",
-      "url": "https://github.com/lszm"
-    },
-    {
-      "name": "Bryan Gergen",
-      "email": "bryangergen@gmail.com",
-      "url": "https://github.com/bgergen"
+      "name": "Kes Peart",
+      "email": "kpeart@adobe.com",
+      "url": "https://github.com/kespeart"
     }
   ],
   "files": [

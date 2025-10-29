@@ -1,6 +1,8 @@
 <p align="center"><img src="https://cdn-images-1.medium.com/max/1600/1*DKS5pYfsAz-H45myvnWWVw.gif" style="max-width:75%;"></p>
 
-# react-tracking [![npm version](https://badge.fury.io/js/react-tracking.svg)](https://badge.fury.io/js/react-tracking)
+# @adobe/react-tracking [![npm version](https://badge.fury.io/js/%40adobe%2Freact-tracking.svg)](https://badge.fury.io/js/@adobe/react-tracking)
+
+> Adobe fork of [NYTimes react-tracking](https://github.com/nytimes/react-tracking)
 
 - React specific tracking library, usable as a higher-order component (as `@decorator` or directly), or as a React Hook
 - Compartmentalize tracking concerns to individual components, avoid leaking across the entire app
@@ -16,22 +18,22 @@ If you just want a quick sandbox to play around with:
 ## Installation
 
 ```
-npm install --save react-tracking
+npm install --save @adobe/react-tracking
 ```
 
 ## Usage
 
 ```js
-import track, { useTracking } from 'react-tracking';
+import track, { useTracking } from '@adobe/react-tracking';
 ```
 
 Both `@track()` and `useTracking()` expect two arguments, `trackingData` and `options`.
 
 - `trackingData` represents the data to be tracked (or a function returning that data)
 - `options` is an optional object that accepts the following properties (when decorating/wrapping a component, it also accepts a `forwardRef` property):
-  - `dispatch`, which is a function to use instead of the default dispatch behavior. See the section on custom `dispatch()` [below](https://github.com/nytimes/react-tracking#custom-optionsdispatch-for-tracking-data).
+  - `dispatch`, which is a function to use instead of the default dispatch behavior. See the section on custom `dispatch()` [below](https://github.com/adobe/react-tracking#custom-optionsdispatch-for-tracking-data).
   - `dispatchOnMount`, when set to `true`, dispatches the tracking data when the component mounts to the DOM. When provided as a function will be called in a useEffect on the component's initial render with all of the tracking context data as the only argument.
-  - `process`, which is a function that can be defined once on some top-level component, used for selectively dispatching tracking events based on each component's tracking data. See more details [below](https://github.com/nytimes/react-tracking#top-level-optionsprocess).
+  - `process`, which is a function that can be defined once on some top-level component, used for selectively dispatching tracking events based on each component's tracking data. See more details [below](https://github.com/adobe/react-tracking#top-level-optionsprocess).
   - `forwardRef` (decorator/HoC only), when set to `true`, adding a ref to the wrapped component will actually return the instance of the underlying component. Default is `false`.
   - `mergeOptions` optionally provide deepmerge options, check [deepmerge options API](https://github.com/TehShrike/deepmerge#options) for details.
 
@@ -59,7 +61,7 @@ The `useTracking` hook returns an object with this same shape, plus a `<Track />
 We can access the `trackEvent` method via the `useTracking` hook from anywhere in the tree:
 
 ```js
-import { useTracking } from 'react-tracking';
+import { useTracking } from '@adobe/react-tracking';
 
 const FooPage = () => {
   const { Track, trackEvent } = useTracking({ page: 'FooPage' });
@@ -76,12 +78,12 @@ const FooPage = () => {
 };
 ```
 
-The `useTracking` hook returns an object with the same `getTrackingData()` and `trackEvent()` methods that are provided as `props.tracking` when wrapping with the `@track()` decorator/HoC (more info about the decorator can be found [below](https://github.com/nytimes/react-tracking#usage-as-a-decorator)). It also returns an additional property on that object: a `<Track />` component that can be returned as the root of your component's sub-tree to pass any new contextual data to its children.
+The `useTracking` hook returns an object with the same `getTrackingData()` and `trackEvent()` methods that are provided as `props.tracking` when wrapping with the `@track()` decorator/HoC (more info about the decorator can be found [below](https://github.com/adobe/react-tracking#usage-as-a-decorator)). It also returns an additional property on that object: a `<Track />` component that can be returned as the root of your component's sub-tree to pass any new contextual data to its children.
 
 > Note that in most cases you would wrap the markup returned by your component with `<Track />`. This will [deepmerge] a new tracking context and make it available to all child components. The only time you _wouldn't_ wrap your returned markup with `<Track />` is if you're on some leaf component and don't have any more child components that need tracking info.
 
 ```js
-import { useTracking } from 'react-tracking';
+import { useTracking } from '@adobe/react-tracking';
 
 const Child = () => {
   const { trackEvent } = useTracking();
@@ -139,7 +141,7 @@ _**Note:** In order to decorate class property methods within a class, as shown 
 
 ```js
 import React from 'react';
-import track from 'react-tracking';
+import track from '@adobe/react-tracking';
 
 @track({ page: 'FooPage' })
 export default class FooPage extends React.Component {
@@ -159,7 +161,7 @@ export default class FooPage extends React.Component {
 You can also track events by importing `track()` and wrapping your stateless functional component, which will provide `props.tracking.trackEvent()` that you can call in your component like so:
 
 ```js
-import track from 'react-tracking';
+import track from '@adobe/react-tracking';
 
 const FooPage = props => {
   return (
@@ -190,7 +192,7 @@ For example, to push objects to `window.myCustomDataLayer[]` instead, you would 
 
 ```js
 import React, { Component } from 'react';
-import track from 'react-tracking';
+import track from '@adobe/react-tracking';
 
 @track({}, { dispatch: data => window.myCustomDataLayer.push(data) })
 export default class App extends Component {
@@ -204,7 +206,7 @@ This can also be done in a functional component using the `useTracking` hook:
 
 ```js
 import React from 'react';
-import { useTracking } from 'react-tracking';
+import { useTracking } from '@adobe/react-tracking';
 
 export default function App({ children }) {
   const { Track } = useTracking(
@@ -342,7 +344,7 @@ function Page2() {
 When `Page1` mounts, event with data `{page: 'Page1', event: 'pageview'}` will be dispatched.
 When `Page2` mounts, nothing will be dispatched.
 
-_**Note:** The `options.process` function does not currently take single-page app (SPA) navigation into account. If the example above were implemented as an SPA, navigating back to `Page1`, with no page reload, would **not** cause `options.process` to fire a second time even if the `Page1` component remounts. The recommended workaround for now is to call `trackEvent` manually in a `React.useEffect` callback in child components where you want the data to fire (see [this code sandbox](https://codesandbox.io/s/flamboyant-keldysh-g3xt9?file=/src/App.tsx) for an example). Follow [issue #189](https://github.com/nytimes/react-tracking/issues/189) to monitor progress on a fix._
+_**Note:** The `options.process` function does not currently take single-page app (SPA) navigation into account. If the example above were implemented as an SPA, navigating back to `Page1`, with no page reload, would **not** cause `options.process` to fire a second time even if the `Page1` component remounts. The recommended workaround for now is to call `trackEvent` manually in a `React.useEffect` callback in child components where you want the data to fire (see [this code sandbox](https://codesandbox.io/s/flamboyant-keldysh-g3xt9?file=/src/App.tsx) for an example)._
 
 ### Tracking Asynchronous Methods
 
@@ -373,7 +375,7 @@ You can also pass a function as an argument instead of an object literal, which 
 
 ```js
 import React from 'react';
-import track from 'react-tracking';
+import track from '@adobe/react-tracking';
 
 // In this case, the "page" tracking data
 // is a function of one of its props (isNew)
@@ -461,7 +463,7 @@ Any data that is passed to the decorator can be accessed in the decorated compon
 
 ```js
 import React from 'react';
-import track from 'react-tracking';
+import track from '@adobe/react-tracking';
 
 // Pass a function to the decorator
 @track(() => {
@@ -484,7 +486,7 @@ Note that if you want to do something like the above example using the `useTrack
 
 ```js
 import React, { useMemo } from 'react';
-import { useTracking } from 'react-tracking';
+import { useTracking } from '@adobe/react-tracking';
 
 export default function AdComponent() {
   const randomId = useMemo(() => Math.floor(Math.random() * 100), []);
@@ -512,7 +514,7 @@ You can get the type definitions for React Tracking from DefinitelyTyped using `
 The `props.tracking` PropType is exported for use, if desired:
 
 ```js
-import { TrackingPropType } from 'react-tracking';
+import { TrackingPropType } from '@adobe/react-tracking';
 ```
 
 Alternatively, if you want to just silence proptype errors when using [eslint react/prop-types](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md), you can add this to your eslintrc:
@@ -527,12 +529,12 @@ Alternatively, if you want to just silence proptype errors when using [eslint re
 
 ### Deepmerge
 
-The merging strategy is the default [deepmerge] merging strategy. We do not yet support extending the deepmerge options. If you're interested/have a need for that, please consider contributing: https://github.com/nytimes/react-tracking/issues/186
+The merging strategy is the default [deepmerge] merging strategy. We do not yet support extending the deepmerge options.
 
 You can also use/reference the copy of deepmerge that react-tracking uses, as it's re-exported for convenience:
 
 ```js
-import { deepmerge } from 'react-tracking';
+import { deepmerge } from '@adobe/react-tracking';
 ```
 
 ### Old Browsers Support
