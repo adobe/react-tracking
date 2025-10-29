@@ -1,14 +1,8 @@
-# ATTENTION: Adobe does not provide support for the npm-publish action. We show it here
-# as an example only. Please see the README at https://github.com/pascalgn/npm-publish-action
-# for full instructions and information on the action.
-#
-# When used in a repo under the github.com/adobe organization, repo maintainers should
-# contact Adobe's Open Source Office to gain access to the secrets.ADOBE_BOT_NPM_TOKEN.
 name: npm-publish
 on:
   push:
     branches:
-      - main # TODO: change this to your default branch
+      - main
 jobs:
   npm-publish:
     name: npm-publish
@@ -24,8 +18,9 @@ jobs:
         create_tag: "true"
         commit_pattern: "^Release (\\S+)"
         workspace: "."
-        publish_command: "yarn"
+        publish_command: "npm"
         publish_args: "--non-interactive"
       env: # More info about the environment variables in the README
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
         NPM_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }} # Contact the Adobe Open Source Office for access
+        HUSKY: 0
