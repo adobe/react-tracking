@@ -1,6 +1,6 @@
 {
   "name": "@adobe/react-tracking",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Declarative tracking for React apps.",
   "keywords": [
     "declarative",
