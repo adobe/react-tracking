@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import hoistNonReactStatics from 'hoist-non-react-statics';
-import PropTypes from 'prop-types';
 
 import ReactTrackingContext from './ReactTrackingContext';
 import useTrackingImpl from './useTrackingImpl';
@@ -13,6 +12,7 @@ export default function withTrackingComponentDecorator(
     const decoratedComponentName =
       DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
 
+    // eslint-disable-next-line react/prop-types
     function WithTracking({ rtFwdRef, ...props }) {
       const latestProps = useRef(props);
 
@@ -66,14 +66,6 @@ export default function withTrackingComponentDecorator(
     }
 
     WithTracking.displayName = `WithTracking(${decoratedComponentName})`;
-    WithTracking.propTypes = {
-      rtFwdRef: PropTypes.oneOfType([
-        PropTypes.func,
-        // eslint-disable-next-line react/forbid-prop-types
-        PropTypes.shape({ current: PropTypes.any }),
-      ]),
-    };
-    WithTracking.defaultProps = { rtFwdRef: undefined };
 
     hoistNonReactStatics(WithTracking, DecoratedComponent);
     return WithTracking;
